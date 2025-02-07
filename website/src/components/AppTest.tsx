@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import apiServices from "../services/api";
-
 import "./../App.css";
 
-const AppTest: React.FC = () => {
-	const [users, setUsers] = useState([]);
+function AppTest() {
+	const [users, setUsers] = useState<any>([]);
 	const [user, setUser] = useState({ nombre: "", correo: "", edad: "" });
 
 	const onChangeValue = (e: any) => {
@@ -14,9 +13,11 @@ const AppTest: React.FC = () => {
 		});
 	};
 
-	const listUser = () => {
-		let response: any = apiServices.getUsers();
-		setUsers(response.data);
+	const listUser = async () => {
+		let response: any = await apiServices.getUsers();
+		console.log("response", response);
+
+		setUsers(response);
 	};
 
 	useEffect(() => {
@@ -39,75 +40,99 @@ const AppTest: React.FC = () => {
 	};
 
 	return (
-		<>
-			<div>
-				<h1>PRUEBA JORDAN</h1>
+		<div className="container">
+			<div className="mt-2 mb-2">
+				<h1 className="text-center">PRUEBA JORDAN</h1>
 			</div>
-			<ul>
-				<div className="container">
-					<div className="row">
-						<div className="form-group">
-							<label>Nombre de la persona *</label>
-							<input
-								type="text"
-								className="form-control"
-								name="nombre"
-								placeholder="Digitar el nombre"
-								value={user.nombre}
-								onChange={(e) => onChangeValue(e)}
-							/>
-						</div>
+			<div className="container">
+				<div className="row mb-2">
+					<div className="form-group">
+						<label>Nombre de la persona *</label>
+						<input
+							type="text"
+							className="form-control"
+							name="nombre"
+							placeholder="Digitar el nombre"
+							value={user.nombre}
+							onChange={(e) => onChangeValue(e)}
+						/>
 					</div>
-					<div className="row">
-						<div className="form-group">
-							<label>Correo *</label>
-							<input
-								type="email"
-								className="form-control"
-								placeholder="Digitar el correo"
-								name="correo"
-								value={user.correo}
-								onChange={(e) => onChangeValue(e)}
-							/>
-						</div>
+				</div>
+				<div className="row mb-2">
+					<div className="form-group">
+						<label>Correo *</label>
+						<input
+							type="email"
+							className="form-control"
+							placeholder="Digitar el correo"
+							name="correo"
+							value={user.correo}
+							onChange={(e) => onChangeValue(e)}
+						/>
 					</div>
+				</div>
+				<div className="row mb-2">
+					<div className="form-group">
+						<label>Edad *</label>
+						<input
+							type="number"
+							className="form-control"
+							placeholder="Digitar la edad"
+							name="edad"
+							value={user.edad}
+							onChange={(e) => onChangeValue(e)}
+						/>
+					</div>
+				</div>
+				<div className="row mt-4 mb-4">
+					<button
+						className="btn btn-success btn-lg btn-block"
+						onClick={addUser}
+					>
+						Guardar
+					</button>
+				</div>
+			</div>
+			<div className="card">
+				<div className="card-body">
 					<div className="row">
-						<div className="form-group">
-							<label>Edad *</label>
-							<input
-								type="number"
-								className="form-control"
-								placeholder="Digitar la edad"
-								name="edad"
-								value={user.edad}
-								onChange={(e) => onChangeValue(e)}
-							/>
+						<h3 className="text-center">Listado de personas</h3>
+						<div className="col-lg-12">
+							<table className="table table-condensed table-bordered table-compact ">
+								<thead>
+									<tr>
+										<th>Nombre</th>
+										<th>Correo</th>
+										<th>Edad</th>
+									</tr>
+								</thead>
+								<tbody>
+									{users.length > 0 &&
+										users.map((user: any) => (
+											<tr key={user.id}>
+												<td>{user.nombre}</td>
+												<td>{user.email}</td>
+												<td>{user.edad}</td>
+												<td>
+													<button
+														className="btn btn-xs btn-danger"
+														onClick={() => deleteUser(user.id)}
+													>
+														Eliminar
+													</button>
+												</td>
+											</tr>
+										))}
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
-				<div className="row">
-					<div className="col-lg-12">
-						<button className="btn btn-success center" onClick={addUser}>
-							Guardar
-						</button>
-					</div>
-				</div>
-				{users.map((user: any) => (
-					<li key={user.id}>
-						{user.name} - {user.email} - {user.edad}
-						<div>
-							<button
-								className="btn btn-xs btn-danger"
-								onClick={() => deleteUser(user.id)}
-							>
-								Eliminar
-							</button>
-						</div>
-					</li>
-				))}
-			</ul>
-		</>
+			</div>
+
+			<div className="container"></div>
+		</div>
 	);
-};
+}
 
 export default AppTest;
