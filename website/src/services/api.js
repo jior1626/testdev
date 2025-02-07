@@ -15,7 +15,7 @@ const apiServices = {
     },
 
     async createUser(data) {
-        let url = `${URL_API}/insertar.php`;
+        let url = `${URL_API}/insert.php`;
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -30,14 +30,14 @@ const apiServices = {
     async eliminarUser(id) {
         let url = `${URL_API}/eliminar.php`;
         const response = await fetch(url, {
-            method: 'GET',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: {
+            body: JSON.stringify({
                 id: id
-            }
+            })
         });
         return response.json();
     }

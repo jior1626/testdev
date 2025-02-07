@@ -4,7 +4,7 @@ import "./../App.css";
 
 function AppTest() {
 	const [users, setUsers] = useState<any>([]);
-	const [user, setUser] = useState({ nombre: "", correo: "", edad: "" });
+	const [user, setUser] = useState({ nombre: "", email: "", edad: "" });
 
 	const onChangeValue = (e: any) => {
 		setUser({
@@ -24,19 +24,31 @@ function AppTest() {
 		listUser();
 	}, []);
 
-	const deleteUser = (id: any) => {
-		let response: any = apiServices.eliminarUser(id);
-		setUsers(users.filter((user: any) => user.id !== id));
+	const deleteUser = async (id: any) => {
+		let response: any = await apiServices.eliminarUser(id);
+		if (response.error) {
+			alert("Error: " + response.error);
+		} else {
+			alert("Usuario eliminado correctamente");
+			listUser();
+		}
+		// setUsers(users.filter((user: any) => user.id !== id));
 	};
 
-	const addUser = () => {
-		if (user.nombre === "" || user.correo === "" || user.edad === "") {
+	const addUser = async () => {
+		if (user.nombre === "" || user.email === "" || user.edad === "") {
 			alert("Todos los campos son obligatorios");
 			return;
 		}
-		let response: any = apiServices.createUser(user);
-		setUser({ nombre: "", correo: "", edad: "" });
-		listUser();
+		let response: any = await apiServices.createUser(user);
+		if (response.error) {
+			alert("Error al crear el usuario");
+		} else {
+			alert("Usuario creado correctamente");
+			console.log("response", response);
+			setUser({ nombre: "", email: "", edad: "" });
+			listUser();
+		}
 	};
 
 	return (
@@ -60,13 +72,13 @@ function AppTest() {
 				</div>
 				<div className="row mb-2">
 					<div className="form-group">
-						<label>Correo *</label>
+						<label>email *</label>
 						<input
 							type="email"
 							className="form-control"
-							placeholder="Digitar el correo"
-							name="correo"
-							value={user.correo}
+							placeholder="Digitar el email"
+							name="email"
+							value={user.email}
 							onChange={(e) => onChangeValue(e)}
 						/>
 					</div>
@@ -113,7 +125,7 @@ function AppTest() {
 												<td>{user.nombre}</td>
 												<td>{user.email}</td>
 												<td>{user.edad}</td>
-												<td>
+												<td className="text-center">
 													<button
 														className="btn btn-xs btn-danger"
 														onClick={() => deleteUser(user.id)}

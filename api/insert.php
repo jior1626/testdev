@@ -17,6 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $email = $_POST['email'] ?? null;
     $edad = $_POST['edad'] ?? null;
 
+
+     // Si $_POST está vacío, intenta leer JSON desde php://input
+     if (empty($nombre) || empty($email) || empty($edad)) {
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
+
+        $nombre = $data['nombre'] ?? null;
+        $email = $data['email'] ?? null;
+        $edad = $data['edad'] ?? null;
+    }
     
     if (!empty($nombre) && !empty($email) && !empty($edad)) {
         try {
